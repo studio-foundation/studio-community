@@ -2,10 +2,16 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
+import semver from 'semver';
+import { parseAgentYaml, parseContractYaml, parsePipelineYaml } from '@studio-foundation/engine';
+import { loadProjectTools } from '@studio-foundation/runner';
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
 const REQUIRED_META_FIELDS = ['name', 'version', 'description', 'author', 'license', 'type'];
 const BUILTIN_PREFIXES = ['repo_manager-', 'shell-', 'search-', 'patch-', 'git-'];
+
+/** The marketplace an unqualified dependency name resolves against. */
+const DEFAULT_MARKETPLACE = 'studio-community';
 
 /** Payload extension -> the content kind it lands in under `.studio/`. */
 const CONTENT_KINDS = {
@@ -18,11 +24,60 @@ const CONTENT_KINDS = {
 };
 const KIND_NAMES = new Set(Object.values(CONTENT_KINDS));
 
+/**
+ * Extension -> the kernel's own loader. Parsing with anything else is how a
+ * package the kernel refuses to load still passes CI: the loaders reject both
+ * missing required fields (a stage without `kind`) and unknown ones (a contract
+ * carrying `field_constraints`), and a plain YAML parse sees neither.
+ */
+const KERNEL_PARSERS = {
+  '.pipeline.yaml': parsePipelineYaml,
+  '.agent.yaml': parseAgentYaml,
+  '.contract.yaml': parseContractYaml,
+};
+
 async function ls(dir) {
   try { return await readdir(dir); } catch { return []; }
 }
 
-async function readMeta(dir, expectedType, errors) {
+/** `[marketplace:]name[@range]` — mirrors the CLI's dependency spec parser. */
+function parseDependencySpec(raw) {
+  const trimmed = raw.trim();
+  const colon = trimmed.indexOf(':');
+  const marketplace = colon === -1 ? DEFAULT_MARKETPLACE : trimmed.slice(0, colon).trim();
+  const rest = (colon === -1 ? trimmed : trimmed.slice(colon + 1)).trim();
+  const at = rest.indexOf('@');
+  return {
+    marketplace,
+    name: (at === -1 ? rest : rest.slice(0, at)).trim(),
+    range: at === -1 ? undefined : rest.slice(at + 1).trim() || undefined,
+  };
+}
+
+/** Every dependency must name a package this registry actually publishes. */
+function checkDependencies(meta, registry, errors) {
+  for (const [category, entry] of Object.entries(meta.dependencies ?? {})) {
+    for (const kind of ['required', 'recommended']) {
+      for (const raw of entry?.[kind] ?? []) {
+        const where = `metadata.json: dependencies.${category}.${kind}`;
+        const spec = parseDependencySpec(raw);
+        if (!spec.name) {
+          errors.push(`${where}: invalid dependency entry "${raw}"`);
+          continue;
+        }
+        if (spec.marketplace !== DEFAULT_MARKETPLACE) continue;
+        const dep = registry.get(spec.name);
+        if (!dep) {
+          errors.push(`${where}: no package named "${spec.name}" in this registry`);
+        } else if (spec.range && !semver.satisfies(dep.version, spec.range)) {
+          errors.push(`${where}: "${spec.name}" is at ${dep.version}, outside range "${spec.range}"`);
+        }
+      }
+    }
+  }
+}
+
+async function readMeta(dir, expectedType, registry, errors) {
   let meta;
   try {
     meta = JSON.parse(await readFile(join(dir, 'metadata.json'), 'utf-8'));
@@ -36,7 +91,61 @@ async function readMeta(dir, expectedType, errors) {
   if (meta.type && meta.type !== expectedType) {
     errors.push(`metadata.json: type must be "${expectedType}", got "${meta.type}"`);
   }
+  if (meta.version && !semver.valid(meta.version)) {
+    errors.push(`metadata.json: version "${meta.version}" is not a valid semver version`);
+  }
+  if (meta.studio_version && !semver.validRange(meta.studio_version)) {
+    errors.push(`metadata.json: studio_version "${meta.studio_version}" is not a valid semver range`);
+  }
+  checkDependencies(meta, registry, errors);
   return meta;
+}
+
+/**
+ * Parse a content file with the kernel loader that owns its extension, falling
+ * back to a plain YAML parse for the extensions no loader claims. Returns null
+ * when the file is unusable.
+ */
+async function parseContentFile(path, rel, errors) {
+  let content;
+  try {
+    content = await readFile(path, 'utf-8');
+  } catch (e) {
+    errors.push(`${rel}: cannot read — ${e.message}`);
+    return null;
+  }
+
+  const ext = Object.keys(KERNEL_PARSERS).find(e => path.endsWith(e));
+  if (ext) {
+    try {
+      return KERNEL_PARSERS[ext](content, rel);
+    } catch (e) {
+      errors.push(`${rel}: ${e.message}`);
+      return null;
+    }
+  }
+
+  let obj;
+  try {
+    obj = yaml.load(content);
+  } catch (e) {
+    errors.push(`${rel}: YAML parse error — ${e.message}`);
+    return null;
+  }
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+    errors.push(`${rel}: must be a YAML object`);
+    return null;
+  }
+  return obj;
+}
+
+/** Run every `.tool.yaml` in `dir` through the runner's plugin loader. */
+async function checkToolPlugins(dir, rel, errors) {
+  try {
+    await loadProjectTools(dir, dir);
+  } catch (e) {
+    errors.push(`${rel}: ${e.message}`);
+  }
 }
 
 function collectStageRefs(stage) {
@@ -55,12 +164,12 @@ function collectStageRefs(stage) {
   return { agents, contracts };
 }
 
-async function validateTemplate(name) {
+async function validateTemplate(name, registry) {
   const errors = [];
   const templateDir = join(ROOT, 'templates', name);
   const projectDir = join(templateDir, 'project');
 
-  const meta = await readMeta(templateDir, 'template', errors);
+  const meta = await readMeta(templateDir, 'template', registry, errors);
   if (!meta) return errors;
 
   try {
@@ -82,6 +191,8 @@ async function validateTemplate(name) {
     ...(meta.dependencies?.agents?.recommended ?? []),
   ]);
 
+  await checkToolPlugins(join(projectDir, 'tools'), 'project/tools', errors);
+
   // --- YAML files: one level of subdirectories in project/ ---
   const subdirs = await ls(projectDir);
   for (const sub of subdirs) {
@@ -90,43 +201,22 @@ async function validateTemplate(name) {
     const files = await ls(subPath);
     for (const file of files) {
       if (!file.endsWith('.yaml') && !file.endsWith('.yml')) continue;
-      const filePath = join(subPath, file);
       const rel = `project/${sub}/${file}`;
-      let content;
-      try {
-        content = await readFile(filePath, 'utf-8');
-      } catch (e) {
-        errors.push(`${rel}: cannot read — ${e.message}`);
-        continue;
-      }
-      let obj;
-      try {
-        obj = yaml.load(content);
-      } catch (e) {
-        errors.push(`${rel}: YAML parse error — ${e.message}`);
-        continue;
-      }
-      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-        errors.push(`${rel}: must be a YAML object`);
-        continue;
-      }
+      const obj = await parseContentFile(join(subPath, file), rel, errors);
+      if (!obj) continue;
 
       // Pipeline
       if (file.endsWith('.pipeline.yaml')) {
-        if (!Array.isArray(obj.stages)) {
-          errors.push(`${rel}: pipeline must have a "stages" array`);
-        } else {
-          for (const stage of obj.stages) {
-            if (!stage || typeof stage !== 'object' || Array.isArray(stage)) continue;
-            const { agents, contracts } = collectStageRefs(stage);
-            for (const a of agents) {
-              if (!agentNames.has(a) && !dependencyAgents.has(a)) {
-                errors.push(`${rel}: agent "${a}" not found in project/agents/ or declared in dependencies`);
-              }
+        for (const stage of obj.stages) {
+          if (!stage || typeof stage !== 'object' || Array.isArray(stage)) continue;
+          const { agents, contracts } = collectStageRefs(stage);
+          for (const a of agents) {
+            if (!agentNames.has(a) && !dependencyAgents.has(a)) {
+              errors.push(`${rel}: agent "${a}" not found in project/agents/ or declared in dependencies`);
             }
-            for (const c of contracts) {
-              if (!contractNames.has(c)) errors.push(`${rel}: contract "${c}" not found in project/contracts/`);
-            }
+          }
+          for (const c of contracts) {
+            if (!contractNames.has(c)) errors.push(`${rel}: contract "${c}" not found in project/contracts/`);
           }
         }
       }
@@ -162,12 +252,14 @@ async function validateTemplate(name) {
   return errors;
 }
 
-async function validatePlugin(name) {
+async function validatePlugin(name, registry) {
   const errors = [];
   const pluginDir = join(ROOT, 'plugins', name);
 
-  const meta = await readMeta(pluginDir, 'plugin', errors);
+  const meta = await readMeta(pluginDir, 'plugin', registry, errors);
   if (!meta) return errors;
+
+  await checkToolPlugins(pluginDir, name, errors);
 
   // --- What the payload actually delivers, by content kind ---
   const actual = {};
@@ -176,31 +268,22 @@ async function validatePlugin(name) {
     if (!ext) continue;
     const kind = CONTENT_KINDS[ext];
     const stem = file.slice(0, -ext.length);
-    let content;
-    try {
-      content = await readFile(join(pluginDir, file), 'utf-8');
-    } catch (e) {
-      errors.push(`${file}: cannot read — ${e.message}`);
-      continue;
-    }
 
     if (ext === '.skill.md') {
+      let content;
+      try {
+        content = await readFile(join(pluginDir, file), 'utf-8');
+      } catch (e) {
+        errors.push(`${file}: cannot read — ${e.message}`);
+        continue;
+      }
       if (!content.trim()) errors.push(`${file}: skill is empty`);
       (actual[kind] ??= []).push(stem);
       continue;
     }
 
-    let obj;
-    try {
-      obj = yaml.load(content);
-    } catch (e) {
-      errors.push(`${file}: YAML parse error — ${e.message}`);
-      continue;
-    }
-    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-      errors.push(`${file}: must be a YAML object`);
-      continue;
-    }
+    const obj = await parseContentFile(join(pluginDir, file), file, errors);
+    if (!obj) continue;
     (actual[kind] ??= []).push(obj.name ?? stem);
   }
 
@@ -222,11 +305,24 @@ async function validatePlugin(name) {
 }
 
 // --- Main ---
+const SECTIONS = [['templates', validateTemplate], ['plugins', validatePlugin]];
+
+/** Package name -> published version, so dependencies resolve against the registry. */
+const registry = new Map();
+for (const [dir] of SECTIONS) {
+  for (const name of await ls(join(ROOT, dir))) {
+    try {
+      const meta = JSON.parse(await readFile(join(ROOT, dir, name, 'metadata.json'), 'utf-8'));
+      if (meta.name) registry.set(meta.name, { version: meta.version });
+    } catch { /* the package's own validation reports it below */ }
+  }
+}
+
 let totalErrors = 0;
 
-for (const [dir, validate] of [['templates', validateTemplate], ['plugins', validatePlugin]]) {
+for (const [dir, validate] of SECTIONS) {
   for (const name of await ls(join(ROOT, dir))) {
-    const errors = await validate(name);
+    const errors = await validate(name, registry);
     if (errors.length > 0) {
       console.error(`\nFAIL  ${dir}/${name}:`);
       for (const e of errors) console.error(`      ${e}`);
