@@ -5,7 +5,9 @@ import yaml from 'js-yaml';
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
 const REQUIRED_META_FIELDS = ['name', 'version', 'description', 'author', 'license', 'type'];
-const BUILTIN_PREFIXES = ['repo_manager-', 'shell-', 'search-', 'patch-', 'git-'];
+// Tools the kernel implements. Everything else — git, search, web_search — comes
+// from a plugin, so it has to be declared as a dependency like any other.
+const BUILTIN_PREFIXES = ['repo_manager-', 'shell-', 'studio_run-'];
 
 /** Payload extension -> the content kind it lands in under `.studio/`. */
 const CONTENT_KINDS = {
@@ -77,10 +79,13 @@ async function validateTemplate(name) {
   const agentNames = new Set(agentFiles.filter(f => f.endsWith('.agent.yaml')).map(f => f.slice(0, -'.agent.yaml'.length)));
   const contractNames = new Set(contractFiles.filter(f => f.endsWith('.contract.yaml')).map(f => f.slice(0, -'.contract.yaml'.length)));
   const toolPlugins = new Set(toolFiles.filter(f => f.endsWith('.tool.yaml')).map(f => f.slice(0, -'.tool.yaml'.length)));
-  const dependencyAgents = new Set([
-    ...(meta.dependencies?.agents?.required ?? []),
-    ...(meta.dependencies?.agents?.recommended ?? []),
-  ]);
+  // Every dependency category resolves by name, never by category (ADR 0002), so a
+  // referenced agent may be declared under any of them.
+  const declaredDependencies = new Set(
+    Object.values(meta.dependencies ?? {}).flatMap(
+      (entry) => [...(entry.required ?? []), ...(entry.recommended ?? [])],
+    ),
+  );
 
   // --- YAML files: one level of subdirectories in project/ ---
   const subdirs = await ls(projectDir);
@@ -120,7 +125,7 @@ async function validateTemplate(name) {
             if (!stage || typeof stage !== 'object' || Array.isArray(stage)) continue;
             const { agents, contracts } = collectStageRefs(stage);
             for (const a of agents) {
-              if (!agentNames.has(a) && !dependencyAgents.has(a)) {
+              if (!agentNames.has(a) && !declaredDependencies.has(a)) {
                 errors.push(`${rel}: agent "${a}" not found in project/agents/ or declared in dependencies`);
               }
             }

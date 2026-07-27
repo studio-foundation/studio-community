@@ -1,18 +1,25 @@
 {
   "name": "software",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Code generation with repo, shell and search tools",
   "author": "studio-core",
   "license": "MIT",
-  "tags": ["software", "code", "development"],
+  "tags": [
+    "software",
+    "code",
+    "development"
+  ],
   "type": "template",
   "studio_version": ">=0.2.0",
   "dependencies": {
-    "tools": {
-      "required": ["repo-manager", "shell", "search"]
-    },
-    "agents": {
-      "required": ["coder"]
+    "plugins": {
+      "required": [
+        "repo-manager",
+        "shell",
+        "search",
+        "coder",
+        "git"
+      ]
     }
   }
 }

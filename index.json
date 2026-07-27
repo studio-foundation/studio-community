@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-07-27T17:33:11.939Z",
+  "generated_at": "2026-07-27T23:05:29.467Z",
   "version": "1",
   "packages": [
     {
       "name": "content",
       "type": "template",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Content creation and editing with search",
       "author": "studio-core",
       "license": "MIT",
@@ -17,13 +17,9 @@
       "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {
-        "tools": {
+        "plugins": {
           "required": [
-            "search"
-          ]
-        },
-        "agents": {
-          "required": [
+            "search",
             "writer"
           ]
         }
@@ -36,7 +32,7 @@
     {
       "name": "document-analysis",
       "type": "template",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Document extraction and structured analysis",
       "author": "studio-core",
       "license": "MIT",
@@ -48,13 +44,9 @@
       "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {
-        "tools": {
+        "plugins": {
           "required": [
-            "search"
-          ]
-        },
-        "agents": {
-          "required": [
+            "search",
             "analyst"
           ]
         }
@@ -67,7 +59,7 @@
     {
       "name": "parallel-tasks",
       "type": "template",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Fan-out parallel task execution with consolidation",
       "author": "studio-core",
       "license": "MIT",
@@ -79,7 +71,7 @@
       "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {
-        "agents": {
+        "plugins": {
           "required": [
             "planner",
             "worker",
@@ -95,7 +87,7 @@
     {
       "name": "software",
       "type": "template",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Code generation with repo, shell and search tools",
       "author": "studio-core",
       "license": "MIT",
@@ -107,16 +99,13 @@
       "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {
-        "tools": {
+        "plugins": {
           "required": [
             "repo-manager",
             "shell",
-            "search"
-          ]
-        },
-        "agents": {
-          "required": [
-            "coder"
+            "search",
+            "coder",
+            "git"
           ]
         }
       },
@@ -128,7 +117,7 @@
     {
       "name": "software-full",
       "type": "template",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "description": "Software development (full pipeline with QA review)",
       "author": "studio-core",
       "license": "MIT",
@@ -141,23 +130,17 @@
       "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {
-        "tools": {
+        "plugins": {
           "required": [
             "repo-manager",
             "shell",
             "search",
-            "git"
-          ]
-        },
-        "agents": {
-          "required": [
+            "git",
             "coder",
             "analyst",
             "publisher",
             "reviewer"
-          ]
-        },
-        "skills": {
+          ],
           "recommended": [
             "code-conventions",
             "git-workflow"
@@ -172,7 +155,7 @@
     {
       "name": "analyst",
       "type": "plugin",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Senior software analyst — reads code, analyzes requests, produces implementation plans",
       "author": "studio-core",
       "license": "MIT",
@@ -183,7 +166,13 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {},
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "search"
+          ]
+        }
+      },
       "source": {
         "type": "local",
         "path": "plugins/analyst"
@@ -222,7 +211,7 @@
     {
       "name": "coder",
       "type": "plugin",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Expert software developer agent — implements changes using repo-manager, shell, and search tools",
       "author": "studio-core",
       "license": "MIT",
@@ -233,7 +222,15 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {},
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "code-conventions",
+            "git-workflow",
+            "search"
+          ]
+        }
+      },
       "source": {
         "type": "local",
         "path": "plugins/coder"
@@ -375,7 +372,7 @@
     {
       "name": "publisher",
       "type": "plugin",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Git workflow specialist — creates branch, commits, pushes, and opens PR/MR",
       "author": "studio-core",
       "license": "MIT",
@@ -387,7 +384,13 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {},
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "git"
+          ]
+        }
+      },
       "source": {
         "type": "local",
         "path": "plugins/publisher"
@@ -451,16 +454,15 @@
     {
       "name": "search",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "description": "Search the codebase by content pattern or file name",
       "author": "studio-core",
       "license": "MIT",
       "tags": [
         "search",
-        "codebase",
-        "builtin"
+        "codebase"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.12.0",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -550,6 +552,31 @@
       }
     },
     {
+      "name": "web-search",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Search the web using the Tavily API",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "search",
+        "web",
+        "tavily"
+      ],
+      "studio_version": ">=0.12.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/web-search"
+      },
+      "provides": {
+        "tools": [
+          "web-search"
+        ]
+      }
+    },
+    {
       "name": "webhook",
       "type": "plugin",
       "version": "1.0.0",
@@ -604,7 +631,7 @@
     {
       "name": "writer",
       "type": "plugin",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Expert content writer — researches topics and creates high-quality structured content",
       "author": "studio-core",
       "license": "MIT",
@@ -615,7 +642,13 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {},
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "search"
+          ]
+        }
+      },
       "source": {
         "type": "local",
         "path": "plugins/writer"

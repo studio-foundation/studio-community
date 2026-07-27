@@ -181,7 +181,7 @@ La validation de **template** couvre :
 - **metadata.json** — champs requis (`name`, `version`, `description`, `author`, `license`, `type`)
 - **Syntaxe YAML** — tous les fichiers `.yaml` dans `project/`
 - **Pipelines** — `stages` array requis ; agents et contracts référencés doivent exister dans `project/`
-- **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `search-*`, `patch-*`, `git-*`) ou définis dans `project/tools/`
+- **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `studio_run-*`) ou définis dans `project/tools/`
 - **Skills** — contenu non vide
 
 La validation de **plugin** couvre :
