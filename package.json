@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-templates.mjs",
+    "validate": "node scripts/validate-packages.mjs",
     "generate-index": "node scripts/generate-index.mjs"
   },
   "dependencies": {

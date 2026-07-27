@@ -1,6 +1,6 @@
 # studio-community
 
-The community registry for [Studio](https://github.com/studio-foundation/studio). It holds shareable packages (tools, templates, pipelines, integrations, agents, plugins, skills) that the Studio CLI can install into a project's `.studio/` directory.
+The community registry for [Studio](https://github.com/studio-foundation/studio). It holds shareable packages — `template` to start a project, `plugin` to add content to an existing one — that the Studio CLI can install into a project's `.studio/` directory.
 
 The CLI side of this registry is wired and working: install, publish, search, update, audit, and sync all run against this repo. The registry content itself is young. Every package here today is first-party, authored alongside Studio. There is no external adoption yet. Contributions are open and the publish flow is built, but nobody outside the core has published a package so far.
 
@@ -8,19 +8,28 @@ The CLI side of this registry is wired and working: install, publish, search, up
 
 ## Current state
 
-What is actually published in this repo today:
+There are two package types, separated by install semantics:
 
-| Type | Payload | Installed into | Published today |
-|------|---------|----------------|-----------------|
-| `tool` | `.tool.yaml` | `.studio/tools/` | 5 |
-| `template` | `project/` directory | `.studio/projects/` | 5 |
-| `integration` | `.integration.yaml` | `.studio/integrations/` | 3 |
-| `agent` | `.agent.yaml` | `.studio/agents/` | 5 |
-| `skill` | `.skill.md` | `.studio/skills/` | 2 |
-| `pipeline` | `.pipeline.yaml` | `.studio/pipelines/` | 0 (supported, none published) |
-| `plugin` | directory | `.studio/plugins/` | 0 (supported, none published) |
+| | `template` | `plugin` |
+|---|---|---|
+| Target | no `.studio/` yet | an existing `.studio/` |
+| Verb | `studio init --template X` | `studio plugin add X` |
+| Cardinality | one per project, at creation | many, at any time |
+| Payload | a `project/` directory | one or more content files |
+| Published today | 5 | 18 |
 
-`pipeline` and `plugin` are valid package types. The CLI installs them and the index generator handles them, but no package of either type exists yet. Their directories are absent until a first package lands. Do not read the rows above as a populated catalog for those two types.
+A plugin's payload is dispatched file by file, by extension:
+
+| Extension | Content kind | Installed into | Published today |
+|---|---|---|---|
+| `.tool.yaml` | `tools` | `.studio/tools/` | 5 |
+| `.agent.yaml` | `agents` | `.studio/agents/` | 8 |
+| `.integration.yaml` | `integrations` | `.studio/integrations/` | 3 |
+| `.skill.md` | `skills` | `.studio/skills/` | 2 |
+| `.pipeline.yaml` | `pipelines` | `.studio/pipelines/` | 0 |
+| `.contract.yaml` | `contracts` | `.studio/contracts/` | 0 |
+
+`tool`, `agent`, `integration`, `skill`, and `pipeline` used to be package types of their own. They are content kinds now — things a plugin delivers, referenced by name from inside YAML (`agent: coder`, `tools: [git-commit]`). A single-file package is simply a plugin whose payload is one file.
 
 `downloads` is tracked per package but is `0` across the board. The registry is new, so `browse` (which orders by download count) currently returns packages in a flat order.
 
@@ -38,7 +47,7 @@ studio registry install software           # a template
 studio registry install git@1.0.0          # pin a version
 ```
 
-There are no package scopes. Names are flat (`linear`, not `@studio/integration-linear`). Installing a template writes it under `.studio/projects/<name>/`.
+There are no package scopes. Names are flat (`linear`, not `@studio/integration-linear`). Installing a template writes it under `.studio/projects/<name>/`. Installing a plugin dispatches each payload file to the `.studio/` subdirectory matching its content kind.
 
 If a package executes shell commands (`execute.type: shell`), the installer detects it and asks for confirmation before writing the file. If a package declares `requires_binaries`, the installer warns when a binary is missing from `PATH`. Required dependencies are installed automatically; recommended ones are prompted.
 
@@ -47,8 +56,8 @@ If a package executes shell commands (`execute.type: shell`), the installer dete
 `studio registry publish <path>` validates the package, forks this repo, pushes a branch, and opens a pull request titled `[type] name vX.Y.Z`. `<path>` points at a file inside the package directory; the command reads the `metadata.json` sitting next to it.
 
 ```bash
-studio registry publish tools/my-tool/my-tool.tool.yaml --dry-run   # validate only
-studio registry publish tools/my-tool/my-tool.tool.yaml             # opens a PR
+studio registry publish plugins/my-plugin/my-plugin.tool.yaml --dry-run   # validate only
+studio registry publish plugins/my-plugin/my-plugin.tool.yaml             # opens a PR
 ```
 
 `--dry-run` checks the required metadata fields and stops before touching GitHub. The non-dry run needs `gh` installed and authenticated.
@@ -60,27 +69,24 @@ studio registry publish tools/my-tool/my-tool.tool.yaml             # opens a PR
 ```
 studio-community/
 ├── index.json          ← package index (auto-generated, do not edit manually)
-├── tools/
 ├── templates/
-├── integrations/
-├── agents/
-├── skills/
+├── plugins/
 ├── scripts/
 │   ├── generate-index.mjs
 │   ├── validate-index.mjs
-│   └── validate-templates.mjs
+│   └── validate-packages.mjs
 └── .github/workflows/
 ```
 
-Each single-file package lives in its own subdirectory with two files:
+A plugin lives in its own subdirectory: a `metadata.json` plus its content files.
 
 ```
-tools/git/
-├── metadata.json     ← name, version, author, tags, type
-└── git.tool.yaml     ← the package payload
+plugins/git/
+├── metadata.json     ← name, version, author, tags, type, provides
+└── git.tool.yaml     ← the payload
 ```
 
-For `template` and `plugin` types, the payload is a directory named `project/` instead of a single file:
+A template's payload is a `project/` directory instead:
 
 ```
 templates/software/
@@ -105,14 +111,20 @@ templates/software/
   "author": "your-github-username",
   "license": "MIT",
   "tags": ["cuisine", "nutrition", "health"],
-  "type": "tool",
+  "type": "plugin",
+  "provides": {
+    "tools": ["nutrition"],
+    "skills": ["allergen-rules"]
+  },
   "studio_version": ">=0.2.0",
   "requires_binaries": ["nutrition-api"]
 }
 ```
 
-Required fields: `name`, `version`, `description`, `author`, `license`, `type`.
+Required fields: `name`, `version`, `description`, `author`, `license`, `type`. A plugin also declares `provides`.
 Optional: `tags`, `studio_version`, `requires_binaries`.
+
+`provides` lists, per content kind, the names the package makes referenceable — the `name` field of the YAML file (so `repo_manager`, not the directory name `repo-manager`), or the filename stem for a skill. Search stays granular through it: "find me a git tool" matches the plugin that provides it. CI asserts the payload delivers exactly what is declared, no more and no less.
 
 A note on `studio_version`: every package in this repo currently declares `>=0.2.0`. The kernel is at 0.4.x, so that constraint is satisfied, but it is also loose and inconsistent across packages. The field is declarative only right now: the installer records it but does not enforce it, so a mismatch will not block an install. These constraints still need a pass to reflect the features each package actually depends on.
 
@@ -125,28 +137,29 @@ You can publish through the CLI (which opens the PR for you) or by hand.
 ### Via the CLI
 
 ```bash
-studio registry publish <type>s/<name>/<file>            # opens a PR
-studio registry publish <type>s/<name>/<file> --dry-run  # validate first
+studio registry publish plugins/<name>/<file>            # opens a PR
+studio registry publish plugins/<name>/<file> --dry-run  # validate first
 ```
 
 ### By hand
 
 1. Fork this repo.
-2. Create your package directory, for example `tools/my-tool/` with a `metadata.json` and a `my-tool.tool.yaml`.
-3. Validate locally. For templates, run `node scripts/validate-templates.mjs` (or `npm run validate`). For any package, `studio registry publish <path> --dry-run` checks the metadata.
-4. Open a pull request titled `[type] package-name vX.Y.Z`, for example `[tool] nutrition-tools v1.0.0`.
+2. Create your package directory, for example `plugins/my-plugin/` with a `metadata.json` and a `my-plugin.tool.yaml`.
+3. Declare what it delivers in `provides`.
+4. Validate locally with `node scripts/validate-packages.mjs` (or `npm run validate`). `studio registry publish <path> --dry-run` checks the metadata.
+5. Open a pull request titled `[type] package-name vX.Y.Z`, for example `[plugin] nutrition-tools v1.0.0`.
 
 The PR title format matters: CI and governance keep to it.
 
 `index.json` is regenerated automatically on merge (and locally with `node scripts/generate-index.mjs`). Do not edit it by hand.
 
-Every index entry carries an explicit `source` — the directory the package was read from, plus the payload filename for single-file types:
+Every index entry carries an explicit `source` — the directory the package was read from:
 
 ```json
-"source": { "type": "local", "path": "tools/studio", "file": "run-pipeline.tool.yaml" }
+"source": { "type": "local", "path": "plugins/studio" }
 ```
 
-The CLI resolves downloads through `source`, so a package directory or payload filename may differ from the declared `name`. `node scripts/validate-index.mjs` checks that every entry still resolves.
+The CLI resolves downloads through `source`, so a package directory may differ from the declared `name` (`plugins/studio` holds the package `studio-run`). `node scripts/validate-index.mjs` checks that every entry still resolves.
 
 To update an existing package, bump `version` in its `metadata.json`. That is the only field to change for a release.
 
@@ -179,7 +192,7 @@ Studio maintains `.studio/registry.lock.json` in your project to track installed
   "installed": {
     "git": {
       "version": "1.0.0",
-      "type": "tool",
+      "type": "plugin",
       "installed_at": "2026-02-28",
       "sha256": "…",
       "required_by": []
@@ -196,7 +209,7 @@ Commit this file. Do not commit the installed packages themselves; they are fetc
 
 ```bash
 studio registry search <query>            # Search packages
-studio registry search <query> --type tool
+studio registry search <query> --type plugin
 studio registry browse                    # List packages by download count
 studio registry install <name>            # Install a package
 studio registry install <name>@<version>  # Install a specific version
@@ -208,6 +221,8 @@ studio registry publish <path>            # Validate, fork, and open a PR
 studio registry publish <path> --dry-run  # Validate only
 studio registry audit                     # Verify SHA256 integrity of installed packages
 studio registry sync                      # Force refresh the index cache
+studio plugin add <name>                  # Install a plugin into an existing .studio/
+studio init --template <name>             # Start a project from a template
 ```
 
 ---

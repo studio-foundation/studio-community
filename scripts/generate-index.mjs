@@ -3,16 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
-const TYPES = ['tools', 'templates', 'pipelines', 'integrations', 'agents', 'plugins', 'skills'];
-
-/** Single-file package types, and the extension their payload carries. */
-const PAYLOAD_EXTENSIONS = {
-  tool: '.tool.yaml',
-  pipeline: '.pipeline.yaml',
-  integration: '.integration.yaml',
-  agent: '.agent.yaml',
-  skill: '.skill.md',
-};
+const TYPES = ['templates', 'plugins'];
 
 const packages = [];
 
@@ -33,18 +24,7 @@ for (const type of TYPES) {
       continue; // skip if no metadata.json
     }
 
-    const source = { type: 'local', path: `${type}/${dir}` };
-    const ext = PAYLOAD_EXTENSIONS[meta.type];
-    if (ext) {
-      const payload = (await readdir(join(ROOT, type, dir))).find((f) => f.endsWith(ext));
-      if (!payload) {
-        console.error(`${type}/${dir}: no ${ext} payload found`);
-        process.exit(1);
-      }
-      source.file = payload;
-    }
-
-    packages.push({
+    const entry = {
       name: meta.name,
       type: meta.type,
       version: meta.version,
@@ -55,8 +35,10 @@ for (const type of TYPES) {
       studio_version: meta.studio_version ?? null,
       downloads: meta.downloads ?? 0,
       dependencies: meta.dependencies ?? {},
-      source,
-    });
+      source: { type: 'local', path: `${type}/${dir}` },
+    };
+    if (meta.type === 'plugin') entry.provides = meta.provides ?? {};
+    packages.push(entry);
   }
 }
 
