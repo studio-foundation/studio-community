@@ -116,7 +116,7 @@ templates/software/
     "tools": ["nutrition"],
     "skills": ["allergen-rules"]
   },
-  "studio_version": ">=0.2.0",
+  "studio_version": ">=0.11.2",
   "requires_binaries": ["nutrition-api"]
 }
 ```
@@ -126,7 +126,7 @@ Optional: `tags`, `studio_version`, `requires_binaries`.
 
 `provides` lists, per content kind, the names the package makes referenceable — the `name` field of the YAML file (so `repo_manager`, not the directory name `repo-manager`), or the filename stem for a skill. Search stays granular through it: "find me a git tool" matches the plugin that provides it. CI asserts the payload delivers exactly what is declared, no more and no less.
 
-A note on `studio_version`: every package in this repo currently declares `>=0.2.0`. The kernel is at 0.4.x, so that constraint is satisfied, but it is also loose and inconsistent across packages. The field is declarative only right now: the installer records it but does not enforce it, so a mismatch will not block an install. These constraints still need a pass to reflect the features each package actually depends on.
+`studio_version` is enforced: `studio registry install` refuses a package whose range excludes the running CLI. Every package here declares `>=0.11.2` — the floor at which the CLI resolves downloads through the index `source` and dispatches a plugin payload by content kind. An older CLI cannot install what this repo publishes today, so the range says so instead of letting the install fail halfway.
 
 ---
 
