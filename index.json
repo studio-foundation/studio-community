@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T02:22:38.602Z",
+  "generated_at": "2026-07-27T17:10:35.472Z",
   "version": "1",
   "packages": [
     {
@@ -316,6 +316,38 @@
       "dependencies": {}
     },
     {
+      "name": "consolidator",
+      "type": "agent",
+      "version": "1.0.0",
+      "description": "Aggregation specialist — merges parallel worker outputs into a single coherent result",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "parallel",
+        "aggregation",
+        "orchestration"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {}
+    },
+    {
+      "name": "planner",
+      "type": "agent",
+      "version": "1.0.0",
+      "description": "Task planning specialist — decomposes a request into 5 independent parallel tasks",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "parallel",
+        "planning",
+        "orchestration"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {}
+    },
+    {
       "name": "publisher",
       "type": "agent",
       "version": "1.1.0",
@@ -343,6 +375,22 @@
         "qa",
         "review",
         "testing"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {}
+    },
+    {
+      "name": "worker",
+      "type": "agent",
+      "version": "1.0.0",
+      "description": "Task execution specialist — executes the planned task matching its own stage name",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "parallel",
+        "execution",
+        "orchestration"
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
