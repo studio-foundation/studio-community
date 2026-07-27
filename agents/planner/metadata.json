@@ -1,0 +1,10 @@
+{
+  "name": "planner",
+  "version": "1.0.0",
+  "description": "Task planning specialist — decomposes a request into 5 independent parallel tasks",
+  "author": "studio-core",
+  "license": "MIT",
+  "tags": ["parallel", "planning", "orchestration"],
+  "type": "agent",
+  "studio_version": ">=0.2.0"
+}
