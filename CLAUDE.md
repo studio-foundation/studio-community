@@ -24,9 +24,11 @@ studio-community/
 ├── skills/
 ├── scripts/
 │   ├── generate-index.mjs  ← régénère index.json depuis tous les metadata.json
+│   ├── validate-index.mjs  ← vérifie que chaque entrée d'index a un `source` résolvable
 │   └── validate-templates.mjs  ← valide les templates (syntaxe YAML, metadata, refs croisées)
 └── .github/workflows/
     ├── generate-index.yml  ← CI : régénère index.json sur merge si metadata.json changé
+    ├── validate-index.yml  ← CI : valide les `source` de index.json sur les PRs
     └── validate-templates.yml  ← CI : valide les templates modifiés sur les PRs
 ```
 
@@ -72,6 +74,9 @@ node scripts/generate-index.mjs
 # Valider les templates modifiés (ou tous si pas de diff git)
 node scripts/validate-templates.mjs
 
+# Vérifier que chaque entrée de index.json pointe sur un payload existant
+node scripts/validate-index.mjs
+
 # Valider un package avant de soumettre
 studio validate tool tools/my-tool/my-tool.tool.yaml
 studio validate integration integrations/my-integration/my-integration.integration.yaml
@@ -92,6 +97,16 @@ studio validate integration integrations/my-integration/my-integration.integrati
 **Ne jamais éditer `index.json` manuellement.** Il est :
 - Régénéré localement via `node scripts/generate-index.mjs`
 - Régénéré automatiquement par CI sur merge si un `metadata.json` a changé
+
+Chaque entrée porte un `source` explicite — le répertoire réellement parcouru, plus le nom du
+fichier payload pour les types mono-fichier :
+
+```json
+"source": { "type": "local", "path": "tools/studio", "file": "run-pipeline.tool.yaml" }
+```
+
+Le CLI résout les téléchargements via `source`, jamais en concaténant `name`. Un répertoire ou
+un nom de fichier qui diverge du `name` déclaré est donc licite.
 
 ### Mettre à jour un package
 
@@ -139,6 +154,7 @@ gh pr create --title "[integration] slack v1.0.0" --body "..."
 | Workflow | Déclencheur | Rôle |
 |----------|-------------|------|
 | `generate-index.yml` | push sur `main` si `metadata.json` changé | Régénère `index.json` |
+| `validate-index.yml` | PR vers `main` | Vérifie que chaque entrée de `index.json` a un `source` résolvable |
 | `validate-templates.yml` | PR vers `main` si `templates/**` changé | Valide metadata, syntaxe YAML, et refs croisées des templates modifiés |
 
 La validation de template couvre :
