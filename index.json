@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T17:10:35.472Z",
+  "generated_at": "2026-07-27T17:14:47.997Z",
   "version": "1",
   "packages": [
     {
@@ -17,7 +17,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "tools/git",
+        "file": "git.tool.yaml"
+      }
     },
     {
       "name": "repo-manager",
@@ -33,7 +38,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "tools/repo-manager",
+        "file": "repo-manager.tool.yaml"
+      }
     },
     {
       "name": "search",
@@ -49,7 +59,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "tools/search",
+        "file": "search.tool.yaml"
+      }
     },
     {
       "name": "shell",
@@ -65,7 +80,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "tools/shell",
+        "file": "shell.tool.yaml"
+      }
     },
     {
       "name": "studio-run",
@@ -81,7 +101,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "tools/studio",
+        "file": "run-pipeline.tool.yaml"
+      }
     },
     {
       "name": "content",
@@ -108,6 +133,10 @@
             "writer"
           ]
         }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/content"
       }
     },
     {
@@ -135,6 +164,10 @@
             "analyst"
           ]
         }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/document-analysis"
       }
     },
     {
@@ -159,6 +192,10 @@
             "consolidator"
           ]
         }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/parallel-tasks"
       }
     },
     {
@@ -188,6 +225,10 @@
             "coder"
           ]
         }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/software"
       }
     },
     {
@@ -228,6 +269,10 @@
             "git-workflow"
           ]
         }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/software-full"
       }
     },
     {
@@ -246,7 +291,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "integrations/linear",
+        "file": "linear.integration.yaml"
+      }
     },
     {
       "name": "slack",
@@ -263,7 +313,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "integrations/slack",
+        "file": "slack.integration.yaml"
+      }
     },
     {
       "name": "webhook",
@@ -281,7 +336,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "integrations/webhook",
+        "file": "webhook.integration.yaml"
+      }
     },
     {
       "name": "analyst",
@@ -297,7 +357,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/analyst",
+        "file": "analyst.agent.yaml"
+      }
     },
     {
       "name": "coder",
@@ -313,7 +378,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/coder",
+        "file": "coder.agent.yaml"
+      }
     },
     {
       "name": "consolidator",
@@ -329,7 +399,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/consolidator",
+        "file": "consolidator.agent.yaml"
+      }
     },
     {
       "name": "planner",
@@ -345,7 +420,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/planner",
+        "file": "planner.agent.yaml"
+      }
     },
     {
       "name": "publisher",
@@ -362,7 +442,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/publisher",
+        "file": "publisher.agent.yaml"
+      }
     },
     {
       "name": "reviewer",
@@ -378,7 +463,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/reviewer",
+        "file": "reviewer.agent.yaml"
+      }
     },
     {
       "name": "worker",
@@ -394,7 +484,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/worker",
+        "file": "worker.agent.yaml"
+      }
     },
     {
       "name": "writer",
@@ -410,7 +505,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "agents/writer",
+        "file": "writer.agent.yaml"
+      }
     },
     {
       "name": "code-conventions",
@@ -426,7 +526,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "skills/code-conventions",
+        "file": "code-conventions.skill.md"
+      }
     },
     {
       "name": "git-workflow",
@@ -442,7 +547,12 @@
       ],
       "studio_version": ">=0.2.0",
       "downloads": 0,
-      "dependencies": {}
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "skills/git-workflow",
+        "file": "git-workflow.skill.md"
+      }
     }
   ]
 }

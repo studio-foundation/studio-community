@@ -67,6 +67,7 @@ studio-community/
 ├── skills/
 ├── scripts/
 │   ├── generate-index.mjs
+│   ├── validate-index.mjs
 │   └── validate-templates.mjs
 └── .github/workflows/
 ```
@@ -138,6 +139,14 @@ studio registry publish <type>s/<name>/<file> --dry-run  # validate first
 The PR title format matters: CI and governance keep to it.
 
 `index.json` is regenerated automatically on merge (and locally with `node scripts/generate-index.mjs`). Do not edit it by hand.
+
+Every index entry carries an explicit `source` — the directory the package was read from, plus the payload filename for single-file types:
+
+```json
+"source": { "type": "local", "path": "tools/studio", "file": "run-pipeline.tool.yaml" }
+```
+
+The CLI resolves downloads through `source`, so a package directory or payload filename may differ from the declared `name`. `node scripts/validate-index.mjs` checks that every entry still resolves.
 
 To update an existing package, bump `version` in its `metadata.json`. That is the only field to change for a release.
 
