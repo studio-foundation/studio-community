@@ -191,7 +191,7 @@ Commun aux deux types :
 
 La validation de **template** ajoute :
 - **Pipelines** — agents et contracts référencés doivent exister dans `project/` (ou dans les deps pour un agent)
-- **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `search-*`, `patch-*`, `git-*`) ou définis dans `project/tools/`
+- **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `studio_run-*`) ou définis dans `project/tools/`
 - **Skills** — contenu non vide
 
 La validation de **plugin** ajoute :

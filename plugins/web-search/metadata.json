@@ -1,21 +1,22 @@
 {
-  "name": "search",
-  "version": "2.0.0",
-  "description": "Search the codebase by content pattern or file name",
+  "name": "web-search",
+  "version": "1.0.0",
+  "description": "Search the web using the Tavily API",
   "author": "studio-core",
   "license": "MIT",
   "tags": [
     "search",
-    "codebase"
+    "web",
+    "tavily"
   ],
   "type": "plugin",
   "provides": {
     "tools": [
-      "search"
+      "web-search"
     ]
   },
   "studio_version": ">=0.11.2",
   "requires_binaries": [
-    "rg"
+    "curl"
   ]
 }

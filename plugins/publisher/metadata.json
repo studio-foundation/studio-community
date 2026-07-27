@@ -1,6 +1,6 @@
 {
   "name": "publisher",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Git workflow specialist — creates branch, commits, pushes, and opens PR/MR",
   "author": "studio-core",
   "license": "MIT",
@@ -16,5 +16,12 @@
       "publisher"
     ]
   },
-  "studio_version": ">=0.11.2"
+  "studio_version": ">=0.11.2",
+  "dependencies": {
+    "plugins": {
+      "required": [
+        "git"
+      ]
+    }
+  }
 }
