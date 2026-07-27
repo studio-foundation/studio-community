@@ -1,113 +1,7 @@
 {
-  "generated_at": "2026-07-27T17:14:47.997Z",
+  "generated_at": "2026-07-27T17:33:11.939Z",
   "version": "1",
   "packages": [
-    {
-      "name": "git",
-      "type": "tool",
-      "version": "1.0.0",
-      "description": "Git version control operations: status, diff, checkout, commit, push, PR/MR creation",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "git",
-        "vcs",
-        "github",
-        "gitlab"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "tools/git",
-        "file": "git.tool.yaml"
-      }
-    },
-    {
-      "name": "repo-manager",
-      "type": "tool",
-      "version": "1.0.0",
-      "description": "Read, write, list, and patch files in the workspace",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "files",
-        "workspace",
-        "builtin"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "tools/repo-manager",
-        "file": "repo-manager.tool.yaml"
-      }
-    },
-    {
-      "name": "search",
-      "type": "tool",
-      "version": "1.0.0",
-      "description": "Search the codebase by content pattern or file name",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "search",
-        "codebase",
-        "builtin"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "tools/search",
-        "file": "search.tool.yaml"
-      }
-    },
-    {
-      "name": "shell",
-      "type": "tool",
-      "version": "1.0.0",
-      "description": "Execute shell commands in the workspace",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "shell",
-        "commands",
-        "builtin"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "tools/shell",
-        "file": "shell.tool.yaml"
-      }
-    },
-    {
-      "name": "studio-run",
-      "type": "tool",
-      "version": "1.0.0",
-      "description": "Launch a Studio pipeline run and wait for completion",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "studio",
-        "pipeline",
-        "run"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "tools/studio",
-        "file": "run-pipeline.tool.yaml"
-      }
-    },
     {
       "name": "content",
       "type": "template",
@@ -276,8 +170,159 @@
       }
     },
     {
+      "name": "analyst",
+      "type": "plugin",
+      "version": "1.1.0",
+      "description": "Senior software analyst — reads code, analyzes requests, produces implementation plans",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "software",
+        "analysis",
+        "planning"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/analyst"
+      },
+      "provides": {
+        "agents": [
+          "analyst"
+        ]
+      }
+    },
+    {
+      "name": "code-conventions",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Coding conventions: file organization, TypeScript patterns, testing, error handling",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "conventions",
+        "typescript",
+        "testing"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/code-conventions"
+      },
+      "provides": {
+        "skills": [
+          "code-conventions"
+        ]
+      }
+    },
+    {
+      "name": "coder",
+      "type": "plugin",
+      "version": "1.1.0",
+      "description": "Expert software developer agent — implements changes using repo-manager, shell, and search tools",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "software",
+        "code",
+        "development"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/coder"
+      },
+      "provides": {
+        "agents": [
+          "coder"
+        ]
+      }
+    },
+    {
+      "name": "consolidator",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Aggregation specialist — merges parallel worker outputs into a single coherent result",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "parallel",
+        "aggregation",
+        "orchestration"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/consolidator"
+      },
+      "provides": {
+        "agents": [
+          "consolidator"
+        ]
+      }
+    },
+    {
+      "name": "git",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Git version control operations: status, diff, checkout, commit, push, PR/MR creation",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "git",
+        "vcs",
+        "github",
+        "gitlab"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/git"
+      },
+      "provides": {
+        "tools": [
+          "git"
+        ]
+      }
+    },
+    {
+      "name": "git-workflow",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Git branching, conventional commits, and PR conventions",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "git",
+        "commits",
+        "workflow"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/git-workflow"
+      },
+      "provides": {
+        "skills": [
+          "git-workflow"
+        ]
+      }
+    },
+    {
       "name": "linear",
-      "type": "integration",
+      "type": "plugin",
       "version": "1.0.0",
       "description": "Triggers pipelines from Linear webhook events and syncs issue status on pipeline completion or failure",
       "author": "studio-core",
@@ -294,13 +339,168 @@
       "dependencies": {},
       "source": {
         "type": "local",
-        "path": "integrations/linear",
-        "file": "linear.integration.yaml"
+        "path": "plugins/linear"
+      },
+      "provides": {
+        "integrations": [
+          "linear"
+        ]
+      }
+    },
+    {
+      "name": "planner",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Task planning specialist — decomposes a request into 5 independent parallel tasks",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "parallel",
+        "planning",
+        "orchestration"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/planner"
+      },
+      "provides": {
+        "agents": [
+          "planner"
+        ]
+      }
+    },
+    {
+      "name": "publisher",
+      "type": "plugin",
+      "version": "1.1.0",
+      "description": "Git workflow specialist — creates branch, commits, pushes, and opens PR/MR",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "git",
+        "github",
+        "gitlab",
+        "publish"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/publisher"
+      },
+      "provides": {
+        "agents": [
+          "publisher"
+        ]
+      }
+    },
+    {
+      "name": "repo-manager",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Read, write, list, and patch files in the workspace",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "files",
+        "workspace",
+        "builtin"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/repo-manager"
+      },
+      "provides": {
+        "tools": [
+          "repo_manager"
+        ]
+      }
+    },
+    {
+      "name": "reviewer",
+      "type": "plugin",
+      "version": "1.1.0",
+      "description": "Strict QA engineer — verifies implementation against acceptance criteria, returns approved or rejected",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "qa",
+        "review",
+        "testing"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/reviewer"
+      },
+      "provides": {
+        "agents": [
+          "reviewer"
+        ]
+      }
+    },
+    {
+      "name": "search",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Search the codebase by content pattern or file name",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "search",
+        "codebase",
+        "builtin"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/search"
+      },
+      "provides": {
+        "tools": [
+          "search"
+        ]
+      }
+    },
+    {
+      "name": "shell",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Execute shell commands in the workspace",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "shell",
+        "commands",
+        "builtin"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/shell"
+      },
+      "provides": {
+        "tools": [
+          "shell"
+        ]
       }
     },
     {
       "name": "slack",
-      "type": "integration",
+      "type": "plugin",
       "version": "1.0.0",
       "description": "Sends Slack notifications to a configured channel when pipeline events occur, such as completion or failure",
       "author": "studio-core",
@@ -316,13 +516,42 @@
       "dependencies": {},
       "source": {
         "type": "local",
-        "path": "integrations/slack",
-        "file": "slack.integration.yaml"
+        "path": "plugins/slack"
+      },
+      "provides": {
+        "integrations": [
+          "slack"
+        ]
+      }
+    },
+    {
+      "name": "studio-run",
+      "type": "plugin",
+      "version": "1.0.0",
+      "description": "Launch a Studio pipeline run and wait for completion",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "studio",
+        "pipeline",
+        "run"
+      ],
+      "studio_version": ">=0.2.0",
+      "downloads": 0,
+      "dependencies": {},
+      "source": {
+        "type": "local",
+        "path": "plugins/studio"
+      },
+      "provides": {
+        "tools": [
+          "studio-run"
+        ]
       }
     },
     {
       "name": "webhook",
-      "type": "integration",
+      "type": "plugin",
       "version": "1.0.0",
       "description": "Sends generic HTTP webhook notifications for pipeline and stage lifecycle events including start, completion, and failure",
       "author": "studio-core",
@@ -339,140 +568,17 @@
       "dependencies": {},
       "source": {
         "type": "local",
-        "path": "integrations/webhook",
-        "file": "webhook.integration.yaml"
-      }
-    },
-    {
-      "name": "analyst",
-      "type": "agent",
-      "version": "1.1.0",
-      "description": "Senior software analyst — reads code, analyzes requests, produces implementation plans",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "software",
-        "analysis",
-        "planning"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "agents/analyst",
-        "file": "analyst.agent.yaml"
-      }
-    },
-    {
-      "name": "coder",
-      "type": "agent",
-      "version": "1.1.0",
-      "description": "Expert software developer agent — implements changes using repo-manager, shell, and search tools",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "software",
-        "code",
-        "development"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "agents/coder",
-        "file": "coder.agent.yaml"
-      }
-    },
-    {
-      "name": "consolidator",
-      "type": "agent",
-      "version": "1.0.0",
-      "description": "Aggregation specialist — merges parallel worker outputs into a single coherent result",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "parallel",
-        "aggregation",
-        "orchestration"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "agents/consolidator",
-        "file": "consolidator.agent.yaml"
-      }
-    },
-    {
-      "name": "planner",
-      "type": "agent",
-      "version": "1.0.0",
-      "description": "Task planning specialist — decomposes a request into 5 independent parallel tasks",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "parallel",
-        "planning",
-        "orchestration"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "agents/planner",
-        "file": "planner.agent.yaml"
-      }
-    },
-    {
-      "name": "publisher",
-      "type": "agent",
-      "version": "1.1.0",
-      "description": "Git workflow specialist — creates branch, commits, pushes, and opens PR/MR",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "git",
-        "github",
-        "gitlab",
-        "publish"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "agents/publisher",
-        "file": "publisher.agent.yaml"
-      }
-    },
-    {
-      "name": "reviewer",
-      "type": "agent",
-      "version": "1.1.0",
-      "description": "Strict QA engineer — verifies implementation against acceptance criteria, returns approved or rejected",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "qa",
-        "review",
-        "testing"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "agents/reviewer",
-        "file": "reviewer.agent.yaml"
+        "path": "plugins/webhook"
+      },
+      "provides": {
+        "integrations": [
+          "webhook"
+        ]
       }
     },
     {
       "name": "worker",
-      "type": "agent",
+      "type": "plugin",
       "version": "1.0.0",
       "description": "Task execution specialist — executes the planned task matching its own stage name",
       "author": "studio-core",
@@ -487,13 +593,17 @@
       "dependencies": {},
       "source": {
         "type": "local",
-        "path": "agents/worker",
-        "file": "worker.agent.yaml"
+        "path": "plugins/worker"
+      },
+      "provides": {
+        "agents": [
+          "worker"
+        ]
       }
     },
     {
       "name": "writer",
-      "type": "agent",
+      "type": "plugin",
       "version": "1.1.0",
       "description": "Expert content writer — researches topics and creates high-quality structured content",
       "author": "studio-core",
@@ -508,50 +618,12 @@
       "dependencies": {},
       "source": {
         "type": "local",
-        "path": "agents/writer",
-        "file": "writer.agent.yaml"
-      }
-    },
-    {
-      "name": "code-conventions",
-      "type": "skill",
-      "version": "1.0.0",
-      "description": "Coding conventions: file organization, TypeScript patterns, testing, error handling",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "conventions",
-        "typescript",
-        "testing"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "skills/code-conventions",
-        "file": "code-conventions.skill.md"
-      }
-    },
-    {
-      "name": "git-workflow",
-      "type": "skill",
-      "version": "1.0.0",
-      "description": "Git branching, conventional commits, and PR conventions",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "git",
-        "commits",
-        "workflow"
-      ],
-      "studio_version": ">=0.2.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "skills/git-workflow",
-        "file": "git-workflow.skill.md"
+        "path": "plugins/writer"
+      },
+      "provides": {
+        "agents": [
+          "writer"
+        ]
       }
     }
   ]
