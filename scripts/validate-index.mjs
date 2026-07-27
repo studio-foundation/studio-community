@@ -3,7 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
-const DIRECTORY_TYPES = new Set(['template', 'plugin']);
+const PACKAGE_TYPES = new Set(['template', 'plugin']);
 
 async function exists(path) {
   try {
@@ -21,6 +21,10 @@ for (const pkg of index.packages) {
   const label = `${pkg.type}/${pkg.name}`;
   const source = pkg.source;
 
+  if (!PACKAGE_TYPES.has(pkg.type)) {
+    errors.push(`${label}: unknown package type "${pkg.type}"`);
+    continue;
+  }
   if (!source) {
     errors.push(`${label}: missing "source"`);
     continue;
@@ -38,14 +42,12 @@ for (const pkg of index.packages) {
     errors.push(`${label}: ${source.path}/metadata.json not found`);
   }
 
-  if (DIRECTORY_TYPES.has(pkg.type)) {
+  if (pkg.type === 'template') {
     if (!(await exists(join(ROOT, source.path, 'project')))) {
       errors.push(`${label}: ${source.path}/project/ not found`);
     }
-  } else if (!source.file) {
-    errors.push(`${label}: source has no "file"`);
-  } else if (!(await exists(join(ROOT, source.path, source.file)))) {
-    errors.push(`${label}: ${source.path}/${source.file} not found`);
+  } else if (!pkg.provides || Object.keys(pkg.provides).length === 0) {
+    errors.push(`${label}: plugin declares no "provides"`);
   }
 }
 

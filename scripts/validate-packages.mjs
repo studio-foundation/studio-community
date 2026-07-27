@@ -1,29 +1,42 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execSync } from 'node:child_process';
 import yaml from 'js-yaml';
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
 const REQUIRED_META_FIELDS = ['name', 'version', 'description', 'author', 'license', 'type'];
 const BUILTIN_PREFIXES = ['repo_manager-', 'shell-', 'search-', 'patch-', 'git-'];
 
+/** Payload extension -> the content kind it lands in under `.studio/`. */
+const CONTENT_KINDS = {
+  '.tool.yaml': 'tools',
+  '.agent.yaml': 'agents',
+  '.pipeline.yaml': 'pipelines',
+  '.integration.yaml': 'integrations',
+  '.contract.yaml': 'contracts',
+  '.skill.md': 'skills',
+};
+const KIND_NAMES = new Set(Object.values(CONTENT_KINDS));
+
 async function ls(dir) {
   try { return await readdir(dir); } catch { return []; }
 }
 
-function getChangedTemplates() {
+async function readMeta(dir, expectedType, errors) {
+  let meta;
   try {
-    const out = execSync('git diff --name-only origin/main...HEAD -- templates/', { encoding: 'utf-8' });
-    const names = new Set();
-    for (const line of out.trim().split('\n').filter(Boolean)) {
-      const m = line.match(/^templates\/([^/]+)\//);
-      if (m) names.add(m[1]);
-    }
-    return [...names];
-  } catch {
-    return [];
+    meta = JSON.parse(await readFile(join(dir, 'metadata.json'), 'utf-8'));
+  } catch (e) {
+    errors.push(`metadata.json: cannot read/parse — ${e.message}`);
+    return null;
   }
+  for (const field of REQUIRED_META_FIELDS) {
+    if (!meta[field]) errors.push(`metadata.json: missing required field "${field}"`);
+  }
+  if (meta.type && meta.type !== expectedType) {
+    errors.push(`metadata.json: type must be "${expectedType}", got "${meta.type}"`);
+  }
+  return meta;
 }
 
 function collectStageRefs(stage) {
@@ -47,17 +60,8 @@ async function validateTemplate(name) {
   const templateDir = join(ROOT, 'templates', name);
   const projectDir = join(templateDir, 'project');
 
-  // --- metadata.json ---
-  let meta;
-  try {
-    meta = JSON.parse(await readFile(join(templateDir, 'metadata.json'), 'utf-8'));
-  } catch (e) {
-    errors.push(`metadata.json: cannot read/parse — ${e.message}`);
-    return errors;
-  }
-  for (const field of REQUIRED_META_FIELDS) {
-    if (!meta[field]) errors.push(`metadata.json: missing required field "${field}"`);
-  }
+  const meta = await readMeta(templateDir, 'template', errors);
+  if (!meta) return errors;
 
   try {
     await stat(projectDir);
@@ -158,28 +162,78 @@ async function validateTemplate(name) {
   return errors;
 }
 
+async function validatePlugin(name) {
+  const errors = [];
+  const pluginDir = join(ROOT, 'plugins', name);
+
+  const meta = await readMeta(pluginDir, 'plugin', errors);
+  if (!meta) return errors;
+
+  // --- What the payload actually delivers, by content kind ---
+  const actual = {};
+  for (const file of await ls(pluginDir)) {
+    const ext = Object.keys(CONTENT_KINDS).find(e => file.endsWith(e));
+    if (!ext) continue;
+    const kind = CONTENT_KINDS[ext];
+    const stem = file.slice(0, -ext.length);
+    let content;
+    try {
+      content = await readFile(join(pluginDir, file), 'utf-8');
+    } catch (e) {
+      errors.push(`${file}: cannot read — ${e.message}`);
+      continue;
+    }
+
+    if (ext === '.skill.md') {
+      if (!content.trim()) errors.push(`${file}: skill is empty`);
+      (actual[kind] ??= []).push(stem);
+      continue;
+    }
+
+    let obj;
+    try {
+      obj = yaml.load(content);
+    } catch (e) {
+      errors.push(`${file}: YAML parse error — ${e.message}`);
+      continue;
+    }
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+      errors.push(`${file}: must be a YAML object`);
+      continue;
+    }
+    (actual[kind] ??= []).push(obj.name ?? stem);
+  }
+
+  if (Object.keys(actual).length === 0) errors.push('no content payload found');
+
+  // --- Declared vs actual ---
+  const declared = meta.provides ?? {};
+  for (const kind of Object.keys(declared)) {
+    if (!KIND_NAMES.has(kind)) errors.push(`metadata.json: provides has unknown content kind "${kind}"`);
+  }
+  for (const kind of new Set([...Object.keys(declared), ...Object.keys(actual)])) {
+    const d = new Set(declared[kind] ?? []);
+    const a = new Set(actual[kind] ?? []);
+    for (const n of d) if (!a.has(n)) errors.push(`provides.${kind} declares "${n}", absent from payload`);
+    for (const n of a) if (!d.has(n)) errors.push(`payload delivers ${kind} "${n}", undeclared in provides`);
+  }
+
+  return errors;
+}
+
 // --- Main ---
-let templates = getChangedTemplates();
-if (templates.length === 0) {
-  // Local run or no changes detected: validate all templates
-  templates = await ls(join(ROOT, 'templates'));
-  if (templates.length > 0) console.log('No git diff detected — validating all templates.\n');
-}
-
-if (templates.length === 0) {
-  console.log('No templates to validate.');
-  process.exit(0);
-}
-
 let totalErrors = 0;
-for (const name of templates) {
-  const errors = await validateTemplate(name);
-  if (errors.length > 0) {
-    console.error(`\nFAIL  templates/${name}:`);
-    for (const e of errors) console.error(`      ${e}`);
-    totalErrors += errors.length;
-  } else {
-    console.log(`PASS  templates/${name}`);
+
+for (const [dir, validate] of [['templates', validateTemplate], ['plugins', validatePlugin]]) {
+  for (const name of await ls(join(ROOT, dir))) {
+    const errors = await validate(name);
+    if (errors.length > 0) {
+      console.error(`\nFAIL  ${dir}/${name}:`);
+      for (const e of errors) console.error(`      ${e}`);
+      totalErrors += errors.length;
+    } else {
+      console.log(`PASS  ${dir}/${name}`);
+    }
   }
 }
 
@@ -187,4 +241,4 @@ if (totalErrors > 0) {
   console.error(`\n${totalErrors} error(s) found.`);
   process.exit(1);
 }
-console.log('\nAll templates valid.');
+console.log('\nAll packages valid.');
