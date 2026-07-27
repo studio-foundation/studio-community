@@ -14,7 +14,7 @@
       "search"
     ]
   },
-  "studio_version": ">=0.12.0",
+  "studio_version": ">=0.2.0",
   "requires_binaries": [
     "rg"
   ]

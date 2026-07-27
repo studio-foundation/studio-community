@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T23:05:29.467Z",
+  "generated_at": "2026-07-27T23:20:20.900Z",
   "version": "1",
   "packages": [
     {
@@ -462,7 +462,7 @@
         "search",
         "codebase"
       ],
-      "studio_version": ">=0.12.0",
+      "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -563,7 +563,7 @@
         "web",
         "tavily"
       ],
-      "studio_version": ">=0.12.0",
+      "studio_version": ">=0.2.0",
       "downloads": 0,
       "dependencies": {},
       "source": {
