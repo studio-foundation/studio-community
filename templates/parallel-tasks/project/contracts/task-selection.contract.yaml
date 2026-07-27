@@ -4,12 +4,12 @@ version: 1
 schema:
   required_fields:
     - tasks
-  field_constraints:
-    - field: tasks
+  fields:
+    tasks:
       type: array
-      min_items: 5
-      max_items: 5
-      item_fields:
-        - id
-        - name
-        - brief
+      items:
+        type: object
+        required_fields:
+          - id
+          - name
+          - brief

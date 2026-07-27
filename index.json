@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T23:20:20.900Z",
+  "generated_at": "2026-07-27T23:30:23.341Z",
   "version": "1",
   "packages": [
     {
@@ -14,7 +14,7 @@
         "writing",
         "research"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -41,7 +41,7 @@
         "documents",
         "extraction"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -68,7 +68,7 @@
         "fan-out",
         "orchestration"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -96,7 +96,7 @@
         "code",
         "development"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -127,7 +127,7 @@
         "development",
         "qa"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -164,7 +164,7 @@
         "analysis",
         "planning"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -186,7 +186,7 @@
     {
       "name": "code-conventions",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Coding conventions: file organization, TypeScript patterns, testing, error handling",
       "author": "studio-core",
       "license": "MIT",
@@ -195,7 +195,7 @@
         "typescript",
         "testing"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -220,7 +220,7 @@
         "code",
         "development"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -244,7 +244,7 @@
     {
       "name": "consolidator",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Aggregation specialist — merges parallel worker outputs into a single coherent result",
       "author": "studio-core",
       "license": "MIT",
@@ -253,7 +253,7 @@
         "aggregation",
         "orchestration"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -269,7 +269,7 @@
     {
       "name": "git",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Git version control operations: status, diff, checkout, commit, push, PR/MR creation",
       "author": "studio-core",
       "license": "MIT",
@@ -279,7 +279,7 @@
         "github",
         "gitlab"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -295,7 +295,7 @@
     {
       "name": "git-workflow",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Git branching, conventional commits, and PR conventions",
       "author": "studio-core",
       "license": "MIT",
@@ -304,7 +304,7 @@
         "commits",
         "workflow"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -320,7 +320,7 @@
     {
       "name": "linear",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Triggers pipelines from Linear webhook events and syncs issue status on pipeline completion or failure",
       "author": "studio-core",
       "license": "MIT",
@@ -331,7 +331,7 @@
         "webhooks",
         "triggers"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -347,7 +347,7 @@
     {
       "name": "planner",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Task planning specialist — decomposes a request into 5 independent parallel tasks",
       "author": "studio-core",
       "license": "MIT",
@@ -356,7 +356,7 @@
         "planning",
         "orchestration"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -382,7 +382,7 @@
         "gitlab",
         "publish"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
@@ -404,7 +404,7 @@
     {
       "name": "repo-manager",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Read, write, list, and patch files in the workspace",
       "author": "studio-core",
       "license": "MIT",
@@ -413,7 +413,7 @@
         "workspace",
         "builtin"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -429,7 +429,7 @@
     {
       "name": "reviewer",
       "type": "plugin",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "description": "Strict QA engineer — verifies implementation against acceptance criteria, returns approved or rejected",
       "author": "studio-core",
       "license": "MIT",
@@ -438,7 +438,7 @@
         "review",
         "testing"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -462,7 +462,7 @@
         "search",
         "codebase"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -478,7 +478,7 @@
     {
       "name": "shell",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Execute shell commands in the workspace",
       "author": "studio-core",
       "license": "MIT",
@@ -487,7 +487,7 @@
         "commands",
         "builtin"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -503,7 +503,7 @@
     {
       "name": "slack",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Sends Slack notifications to a configured channel when pipeline events occur, such as completion or failure",
       "author": "studio-core",
       "license": "MIT",
@@ -513,7 +513,7 @@
         "messaging",
         "alerts"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -529,7 +529,7 @@
     {
       "name": "studio-run",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Launch a Studio pipeline run and wait for completion",
       "author": "studio-core",
       "license": "MIT",
@@ -538,7 +538,7 @@
         "pipeline",
         "run"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -563,7 +563,7 @@
         "web",
         "tavily"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -579,7 +579,7 @@
     {
       "name": "webhook",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Sends generic HTTP webhook notifications for pipeline and stage lifecycle events including start, completion, and failure",
       "author": "studio-core",
       "license": "MIT",
@@ -590,7 +590,7 @@
         "events",
         "generic"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -606,7 +606,7 @@
     {
       "name": "worker",
       "type": "plugin",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Task execution specialist — executes the planned task matching its own stage name",
       "author": "studio-core",
       "license": "MIT",
@@ -615,7 +615,7 @@
         "execution",
         "orchestration"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -640,7 +640,7 @@
         "writing",
         "research"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.11.2",
       "downloads": 0,
       "dependencies": {
         "plugins": {
