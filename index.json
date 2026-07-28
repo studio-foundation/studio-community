@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-28T21:53:14.412Z",
+  "generated_at": "2026-07-28T22:01:15.425Z",
   "version": "1",
   "packages": [
     {
@@ -59,7 +59,7 @@
     {
       "name": "parallel-tasks",
       "type": "template",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Fan-out parallel task execution with consolidation",
       "author": "studio-core",
       "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "parallel-tasks",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Fan-out parallel task execution with consolidation",
   "author": "studio-core",
   "license": "MIT",
@@ -11,6 +11,7 @@
   ],
   "type": "template",
   "studio_version": ">=0.11.2",
+  "requires_binaries": ["jq"],
   "dependencies": {
     "plugins": {
       "required": [

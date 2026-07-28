@@ -13,3 +13,10 @@ schema:
           - id
           - name
           - brief
+
+# The pipeline fans out to exactly 5 worker stages — a shorter or longer list
+# starves or drops tasks. Item counts are not expressible in schema.fields.
+validators:
+  - name: exactly-five-tasks
+    command: >-
+      jq '(.tasks | length) as $n | {valid: ($n == 5), errors: (if $n == 5 then [] else ["expected exactly 5 tasks, got \($n)"] end)}'
