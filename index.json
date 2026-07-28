@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T23:30:23.341Z",
+  "generated_at": "2026-07-28T21:53:14.412Z",
   "version": "1",
   "packages": [
     {
@@ -117,7 +117,7 @@
     {
       "name": "software-full",
       "type": "template",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "description": "Software development (full pipeline with QA review)",
       "author": "studio-core",
       "license": "MIT",
