@@ -1,18 +1,18 @@
 {
-  "name": "studio-run",
-  "version": "1.0.1",
-  "description": "Launch a Studio pipeline run and wait for completion",
+  "name": "web-search",
+  "version": "1.0.0",
+  "description": "Search the web using the Tavily API",
   "author": "studio-core",
   "license": "MIT",
   "tags": [
-    "studio",
-    "pipeline",
-    "run"
+    "search",
+    "web",
+    "tavily"
   ],
   "type": "plugin",
   "provides": {
     "tools": [
-      "studio-run"
+      "web-search"
     ]
   },
   "studio_version": ">=0.11.2",

@@ -5,6 +5,9 @@
     "generate-index": "node scripts/generate-index.mjs"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "@studio-foundation/engine": "^0.11.1",
+    "@studio-foundation/runner": "^0.11.1",
+    "js-yaml": "^4.1.0",
+    "semver": "^7.8.5"
   }
 }

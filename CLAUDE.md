@@ -68,7 +68,7 @@ Chaque fichier du payload est dispatché selon son extension :
     "tools": ["nutrition"],
     "skills": ["allergen-rules"]
   },
-  "studio_version": ">=0.2.0",
+  "studio_version": ">=0.11.2",
   "requires_binaries": ["nutrition-api"]
 }
 ```
@@ -164,7 +164,9 @@ gh pr create --title "[integration] slack v1.0.0" --body "..."
 
 4. **Templates = répertoire `project/`**, pas un fichier unique. La structure interne doit suivre la structure `.studio/` standard : `pipelines/`, `agents/`, `contracts/`, `tools/`, `inputs/`.
 
-5. **`studio_version`** — utiliser le format `>=X.Y.Z` pour la compatibilité minimale.
+5. **`studio_version`** — range semver (`>=X.Y.Z`), **appliqué à l'install** : un CLI hors range
+   refuse le package. Les packages de ce repo déclarent `>=0.11.2`, le plancher où le CLI résout
+   via `source` et dispatche un payload de plugin par kind de contenu.
 
 6. **`provides` doit matcher le payload à l'octet près** — un fichier de contenu non déclaré fait
    échouer le CI, tout comme un nom déclaré sans fichier correspondant.
@@ -175,19 +177,23 @@ gh pr create --title "[integration] slack v1.0.0" --body "..."
 |----------|-------------|------|
 | `generate-index.yml` | push sur `main` si `metadata.json` changé | Régénère `index.json` |
 | `validate-index.yml` | PR vers `main` | Vérifie que chaque entrée de `index.json` a un `source` résolvable |
-| `validate-packages.yml` | PR vers `main` si `templates/**` ou `plugins/**` changé | Valide metadata, syntaxe YAML, refs croisées, et `provides` |
+| `validate-packages.yml` | PR vers `main` | Valide metadata, chargement kernel, refs croisées, deps, et `provides` |
 
-La validation de **template** couvre :
-- **metadata.json** — champs requis (`name`, `version`, `description`, `author`, `license`, `type`)
-- **Syntaxe YAML** — tous les fichiers `.yaml` dans `project/`
-- **Pipelines** — `stages` array requis ; agents et contracts référencés doivent exister dans `project/`
-- **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `search-*`, `patch-*`, `git-*`) ou définis dans `project/tools/`
-- **Contracts** — seuls les champs implémentés par le kernel sont acceptés ; un champ inconnu (`field_constraints`, `post_validation.constraints`) est du config-théâtre et fait échouer le CI
+`validate-packages.mjs` charge les `.pipeline.yaml`, `.agent.yaml` et `.contract.yaml` avec les
+**loaders du kernel** (`@studio-foundation/engine`) et les `.tool.yaml` avec
+`loadProjectTools` (`@studio-foundation/runner`). Un fichier que le kernel refuse au chargement
+(stage sans `kind`, champ de contrat inconnu, placeholder non déclaré) fait échouer le CI —
+c'est ce qui empêche un faux PASS sur un package ininstallable.
+
+Commun aux deux types :
+- **metadata.json** — champs requis (`name`, `version`, `description`, `author`, `license`, `type`) ; `version` semver valide ; `studio_version` range semver valide
+- **Dépendances** — chaque nom de `dependencies.<kind>.{required,recommended}` existe dans ce registre, et la version publiée satisfait le range s'il y en a un
+
+La validation de **template** ajoute :
+- **Pipelines** — agents et contracts référencés doivent exister dans `project/` (ou dans les deps pour un agent)
+- **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `studio_run-*`) ou définis dans `project/tools/`
 - **Skills** — contenu non vide
 
-La validation de **plugin** couvre :
-- **metadata.json** — mêmes champs requis, `type: "plugin"`
-- **Syntaxe YAML** — tous les fichiers de contenu du payload
+La validation de **plugin** ajoute :
 - **`provides`** — chaque nom déclaré existe dans le payload, et chaque fichier du payload est déclaré
-- **Contracts** — même contrôle des champs supportés que pour un template
 - **Skills** — contenu non vide
