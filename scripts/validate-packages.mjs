@@ -18,6 +18,48 @@ const CONTENT_KINDS = {
 };
 const KIND_NAMES = new Set(Object.values(CONTENT_KINDS));
 
+/**
+ * Contract fields the kernel implements, per block — mirrors
+ * engine/src/pipeline/contract-loader.ts. A field listed nowhere is config-theatre:
+ * the kernel rejects it at load time, so the registry rejects it at PR time.
+ */
+const CONTRACT_FIELDS = ['name', 'version', 'schema', 'tool_calls', 'validators', 'custom_rules', 'post_validation', 'expected_outputs'];
+const SCHEMA_FIELDS = ['required_fields', 'fields'];
+const FIELD_SPEC_FIELDS = ['type', 'enum', 'required_fields', 'fields', 'items'];
+const TOOL_CALLS_FIELDS = ['minimum', 'maximum', 'required_tools', 'required_tool_groups', 'counted_tools'];
+const REJECTION_DETECTION_FIELDS = ['field', 'rejected_values', 'approved_values', 'details_field', 'summary_field', 'reject_if_non_empty'];
+
+function checkKnownFields(block, allowed, where, rel, errors) {
+  if (!block || typeof block !== 'object' || Array.isArray(block)) return;
+  for (const key of Object.keys(block)) {
+    if (!allowed.includes(key)) errors.push(`${rel}: unknown field "${key}" in ${where} — not implemented by the kernel`);
+  }
+}
+
+function checkFieldSpecs(specs, where, rel, errors) {
+  if (!specs || typeof specs !== 'object' || Array.isArray(specs)) return;
+  for (const [name, spec] of Object.entries(specs)) {
+    checkKnownFields(spec, FIELD_SPEC_FIELDS, `${where}.${name}`, rel, errors);
+    checkFieldSpecs(spec?.fields, `${where}.${name}.fields`, rel, errors);
+    if (spec?.items) {
+      checkKnownFields(spec.items, FIELD_SPEC_FIELDS, `${where}.${name}.items`, rel, errors);
+      checkFieldSpecs(spec.items.fields, `${where}.${name}.items.fields`, rel, errors);
+    }
+  }
+}
+
+function validateContract(obj, rel, errors) {
+  checkKnownFields(obj, CONTRACT_FIELDS, 'contract', rel, errors);
+  checkKnownFields(obj.schema, SCHEMA_FIELDS, 'schema', rel, errors);
+  checkFieldSpecs(obj.schema?.fields, 'schema.fields', rel, errors);
+  checkKnownFields(obj.tool_calls, TOOL_CALLS_FIELDS, 'tool_calls', rel, errors);
+  checkKnownFields(obj.expected_outputs, ['files'], 'expected_outputs', rel, errors);
+  checkKnownFields(obj.post_validation, ['rejection_detection'], 'post_validation', rel, errors);
+  checkKnownFields(obj.post_validation?.rejection_detection, REJECTION_DETECTION_FIELDS, 'post_validation.rejection_detection', rel, errors);
+  for (const v of obj.validators ?? []) checkKnownFields(v, ['name', 'command', 'timeout_ms'], 'validators[]', rel, errors);
+  for (const r of obj.custom_rules ?? []) checkKnownFields(r, ['name', 'description', 'check'], 'custom_rules[]', rel, errors);
+}
+
 async function ls(dir) {
   try { return await readdir(dir); } catch { return []; }
 }
@@ -111,6 +153,9 @@ async function validateTemplate(name) {
         continue;
       }
 
+      // Contract
+      if (file.endsWith('.contract.yaml')) validateContract(obj, rel, errors);
+
       // Pipeline
       if (file.endsWith('.pipeline.yaml')) {
         if (!Array.isArray(obj.stages)) {
@@ -201,6 +246,8 @@ async function validatePlugin(name) {
       errors.push(`${file}: must be a YAML object`);
       continue;
     }
+    if (ext === '.contract.yaml') validateContract(obj, file, errors);
+
     (actual[kind] ??= []).push(obj.name ?? stem);
   }
 

@@ -182,10 +182,12 @@ La validation de **template** couvre :
 - **Syntaxe YAML** — tous les fichiers `.yaml` dans `project/`
 - **Pipelines** — `stages` array requis ; agents et contracts référencés doivent exister dans `project/`
 - **Agents** — tools référencés doivent être des builtins (`repo_manager-*`, `shell-*`, `search-*`, `patch-*`, `git-*`) ou définis dans `project/tools/`
+- **Contracts** — seuls les champs implémentés par le kernel sont acceptés ; un champ inconnu (`field_constraints`, `post_validation.constraints`) est du config-théâtre et fait échouer le CI
 - **Skills** — contenu non vide
 
 La validation de **plugin** couvre :
 - **metadata.json** — mêmes champs requis, `type: "plugin"`
 - **Syntaxe YAML** — tous les fichiers de contenu du payload
 - **`provides`** — chaque nom déclaré existe dans le payload, et chaque fichier du payload est déclaré
+- **Contracts** — même contrôle des champs supportés que pour un template
 - **Skills** — contenu non vide

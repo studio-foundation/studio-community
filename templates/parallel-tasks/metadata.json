@@ -1,12 +1,13 @@
 {
   "name": "parallel-tasks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Fan-out parallel task execution with consolidation",
   "author": "studio-core",
   "license": "MIT",
   "tags": ["parallel", "fan-out", "orchestration"],
   "type": "template",
-  "studio_version": ">=0.2.0",
+  "studio_version": ">=0.5.0",
+  "requires_binaries": ["jq"],
   "dependencies": {
     "agents": {
       "required": ["planner", "worker", "consolidator"]

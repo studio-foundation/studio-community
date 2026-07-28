@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T17:33:11.939Z",
+  "generated_at": "2026-07-28T21:46:58.338Z",
   "version": "1",
   "packages": [
     {
@@ -67,7 +67,7 @@
     {
       "name": "parallel-tasks",
       "type": "template",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Fan-out parallel task execution with consolidation",
       "author": "studio-core",
       "license": "MIT",
@@ -76,7 +76,7 @@
         "fan-out",
         "orchestration"
       ],
-      "studio_version": ">=0.2.0",
+      "studio_version": ">=0.5.0",
       "downloads": 0,
       "dependencies": {
         "agents": {
@@ -128,7 +128,7 @@
     {
       "name": "software-full",
       "type": "template",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "description": "Software development (full pipeline with QA review)",
       "author": "studio-core",
       "license": "MIT",
