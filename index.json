@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-07-28T22:01:15.425Z",
+  "generated_at": "2026-09-19T19:17:34.645Z",
   "version": "1",
   "packages": [
     {
       "name": "content",
       "type": "template",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "description": "Content creation and editing with search",
       "author": "studio-core",
       "license": "MIT",
@@ -32,7 +32,7 @@
     {
       "name": "document-analysis",
       "type": "template",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "description": "Document extraction and structured analysis",
       "author": "studio-core",
       "license": "MIT",
@@ -87,7 +87,7 @@
     {
       "name": "software",
       "type": "template",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "description": "Code generation with repo, shell and search tools",
       "author": "studio-core",
       "license": "MIT",
