@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T01:59:35.342Z",
+  "generated_at": "2026-09-20T02:29:03.293Z",
   "version": "1",
   "packages": [
     {
@@ -582,32 +582,6 @@
       }
     },
     {
-      "name": "slack",
-      "type": "plugin",
-      "version": "1.0.1",
-      "description": "Sends Slack notifications to a configured channel when pipeline events occur, such as completion or failure",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "slack",
-        "notifications",
-        "messaging",
-        "alerts"
-      ],
-      "studio_version": ">=0.11.2",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "plugins/slack"
-      },
-      "provides": {
-        "integrations": [
-          "slack"
-        ]
-      }
-    },
-    {
       "name": "studio-run",
       "type": "plugin",
       "version": "1.0.1",
@@ -654,33 +628,6 @@
       "provides": {
         "tools": [
           "web-search"
-        ]
-      }
-    },
-    {
-      "name": "webhook",
-      "type": "plugin",
-      "version": "1.0.1",
-      "description": "Sends generic HTTP webhook notifications for pipeline and stage lifecycle events including start, completion, and failure",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "webhook",
-        "http",
-        "notifications",
-        "events",
-        "generic"
-      ],
-      "studio_version": ">=0.11.2",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "plugins/webhook"
-      },
-      "provides": {
-        "integrations": [
-          "webhook"
         ]
       }
     },
