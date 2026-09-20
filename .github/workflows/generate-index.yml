@@ -30,7 +30,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           BRANCH: chore/regenerate-index
         run: |
-          git diff --quiet index.json && exit 0
+          # generated_at changes on every run, so it must not count as a change.
+          [ -z "$(git diff -I'"generated_at"' index.json)" ] && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -B "$BRANCH"
