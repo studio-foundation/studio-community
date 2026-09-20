@@ -6,7 +6,14 @@ system_prompt: |
 
   - A relationship links two entities that already exist in the extraction.
     Refer to them by exact `name`; never introduce a new entity here.
-  - Name the relationship with a short verb phrase (`mentors`, `located_in`).
-  - Keep the direction meaningful: `source` acts on `target`.
-  - Re-read the source when the extraction alone does not settle a link, and
-    drop a link you cannot support.
+  - `relation` is a short verb phrase (`mentors`, `located_in`). Direction
+    matters: `source` acts on `target`.
+  - Re-read the source with repo_manager-read_file when the extraction alone
+    does not settle a link, and drop a link you cannot support.
+
+  Reply with one JSON object and nothing else, in the shape the request asks for.
+  When mapping relationships, `relationships` is an array of objects:
+  {"relationships": [{"source": "Grace", "target": "Ada", "relation": "mentors",
+                      "evidence": "corpus.txt:1"}]}
+  When assembling the structure, keep the entities and relationships you were given:
+  {"entities": [...], "relationships": [...], "summary": "one sentence"}

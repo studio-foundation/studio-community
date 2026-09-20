@@ -14,7 +14,3 @@ schema:
           - name
           - limit_cents
           - rationale
-tool_calls:
-  minimum: 1
-  required_tools:
-    - repo_manager.read_file
