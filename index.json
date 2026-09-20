@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T02:29:03.293Z",
+  "generated_at": "2026-09-20T03:08:14.458Z",
   "version": "1",
   "packages": [
     {
@@ -32,7 +32,7 @@
     {
       "name": "data",
       "type": "template",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Validate data files against a schema, transform them, and check them against compliance rules",
       "author": "studio-core",
       "license": "MIT",
@@ -86,7 +86,7 @@
     {
       "name": "entity-extraction",
       "type": "template",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Extract entities from a corpus, map the relationships between them, and assemble an interconnected structure",
       "author": "studio-core",
       "license": "MIT",
@@ -113,7 +113,7 @@
     {
       "name": "finance",
       "type": "template",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Categorize transactions from a bank export, plan a budget, and split shared expenses between accounts",
       "author": "studio-core",
       "license": "MIT",
