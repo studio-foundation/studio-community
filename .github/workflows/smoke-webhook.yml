@@ -1,0 +1,22 @@
+name: Smoke-test webhook recipe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'templates/software/project/webhook/**'
+      - 'scripts/smoke-webhook.mjs'
+      - '.github/workflows/smoke-webhook.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Smoke-test the webhook recipe
+        run: node scripts/smoke-webhook.mjs
