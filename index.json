@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-19T19:17:34.645Z",
+  "generated_at": "2026-09-20T01:59:35.342Z",
   "version": "1",
   "packages": [
     {
@@ -30,6 +30,33 @@
       }
     },
     {
+      "name": "data",
+      "type": "template",
+      "version": "1.0.0",
+      "description": "Validate data files against a schema, transform them, and check them against compliance rules",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "data",
+        "validation",
+        "etl",
+        "compliance"
+      ],
+      "studio_version": ">=0.11.2",
+      "downloads": 0,
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "repo-manager"
+          ]
+        }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/data"
+      }
+    },
+    {
       "name": "document-analysis",
       "type": "template",
       "version": "1.2.1",
@@ -54,6 +81,60 @@
       "source": {
         "type": "local",
         "path": "templates/document-analysis"
+      }
+    },
+    {
+      "name": "entity-extraction",
+      "type": "template",
+      "version": "1.0.0",
+      "description": "Extract entities from a corpus, map the relationships between them, and assemble an interconnected structure",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "extraction",
+        "entities",
+        "relationships",
+        "knowledge-graph"
+      ],
+      "studio_version": ">=0.11.2",
+      "downloads": 0,
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "repo-manager"
+          ]
+        }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/entity-extraction"
+      }
+    },
+    {
+      "name": "finance",
+      "type": "template",
+      "version": "1.0.0",
+      "description": "Categorize transactions from a bank export, plan a budget, and split shared expenses between accounts",
+      "author": "studio-core",
+      "license": "MIT",
+      "tags": [
+        "finance",
+        "transactions",
+        "budget",
+        "expenses"
+      ],
+      "studio_version": ">=0.11.2",
+      "downloads": 0,
+      "dependencies": {
+        "plugins": {
+          "required": [
+            "repo-manager"
+          ]
+        }
+      },
+      "source": {
+        "type": "local",
+        "path": "templates/finance"
       }
     },
     {
@@ -320,8 +401,8 @@
     {
       "name": "linear",
       "type": "plugin",
-      "version": "1.0.1",
-      "description": "Triggers pipelines from Linear webhook events and syncs issue status on pipeline completion or failure",
+      "version": "2.0.0",
+      "description": "Launches a pipeline when a Linear issue moves to In Progress, and comments on the issue when the run fails",
       "author": "studio-core",
       "license": "MIT",
       "tags": [
@@ -331,7 +412,7 @@
         "webhooks",
         "triggers"
       ],
-      "studio_version": ">=0.11.2",
+      "studio_version": ">=0.14.0",
       "downloads": 0,
       "dependencies": {},
       "source": {
@@ -339,7 +420,7 @@
         "path": "plugins/linear"
       },
       "provides": {
-        "integrations": [
+        "triggers": [
           "linear"
         ]
       }
