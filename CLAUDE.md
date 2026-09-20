@@ -38,7 +38,7 @@ Deux types, définis par la sémantique d'installation :
 | Cardinalité | un par projet, à la création | plusieurs, n'importe quand |
 | Payload | répertoire `project/` | fichiers de contenu |
 
-Les anciens types (`tool`, `pipeline`, `integration`, `agent`, `skill`) ne sont plus des types de
+Les anciens types (`tool`, `pipeline`, `agent`, `skill`) ne sont plus des types de
 package : ce sont des **kinds de contenu** transportés par un plugin. Un package mono-fichier est
 un plugin dont le payload est un seul fichier.
 
@@ -49,7 +49,7 @@ Chaque fichier du payload est dispatché selon son extension :
 | `.tool.yaml` | `tools` | `.studio/tools/` |
 | `.agent.yaml` | `agents` | `.studio/agents/` |
 | `.pipeline.yaml` | `pipelines` | `.studio/pipelines/` |
-| `.integration.yaml` | `integrations` | `.studio/integrations/` |
+| `.trigger.yaml` | `triggers` | `.studio/triggers/` |
 | `.contract.yaml` | `contracts` | `.studio/contracts/` |
 | `.skill.md` | `skills` | `.studio/skills/` |
 
@@ -96,7 +96,6 @@ node scripts/validate-index.mjs
 
 # Valider un package avant de soumettre
 studio validate tool plugins/my-plugin/my-plugin.tool.yaml
-studio validate integration plugins/my-integration/my-integration.integration.yaml
 ```
 
 ## Workflow de contribution
@@ -145,11 +144,11 @@ Incrémenter `version` dans `metadata.json` — c'est le seul champ à changer p
 git checkout -b <type>/<description-courte>
 
 # 2. Commits atomiques
-git commit -m "feat(integrations): add slack integration v1.0.0"
+git commit -m "feat(plugins): add nutrition-tools v1.0.0"
 
 # 3. Push + PR
 git push -u origin <branch-name>
-gh pr create --title "[integration] slack v1.0.0" --body "..."
+gh pr create --title "[plugin] nutrition-tools v1.0.0" --body "..."
 ```
 
 **Tout ticket Linear = worktree en premier.** Utilise `superpowers:using-git-worktrees`.
