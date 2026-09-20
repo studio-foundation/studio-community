@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T03:08:14.458Z",
+  "generated_at": "2026-09-20T13:51:25.880Z",
   "version": "1",
   "packages": [
     {
@@ -168,7 +168,7 @@
     {
       "name": "software",
       "type": "template",
-      "version": "1.2.1",
+      "version": "1.3.0",
       "description": "Code generation with repo, shell and search tools",
       "author": "studio-core",
       "license": "MIT",
@@ -395,33 +395,6 @@
       "provides": {
         "skills": [
           "git-workflow"
-        ]
-      }
-    },
-    {
-      "name": "linear",
-      "type": "plugin",
-      "version": "2.0.0",
-      "description": "Launches a pipeline when a Linear issue moves to In Progress, and comments on the issue when the run fails",
-      "author": "studio-core",
-      "license": "MIT",
-      "tags": [
-        "linear",
-        "issues",
-        "project-management",
-        "webhooks",
-        "triggers"
-      ],
-      "studio_version": ">=0.14.0",
-      "downloads": 0,
-      "dependencies": {},
-      "source": {
-        "type": "local",
-        "path": "plugins/linear"
-      },
-      "provides": {
-        "triggers": [
-          "linear"
         ]
       }
     },

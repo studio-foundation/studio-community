@@ -24,7 +24,6 @@ A plugin's payload is dispatched file by file, by extension:
 |---|---|---|---|
 | `.tool.yaml` | `tools` | `.studio/tools/` | 5 |
 | `.agent.yaml` | `agents` | `.studio/agents/` | 8 |
-| `.trigger.yaml` | `triggers` | `.studio/triggers/` | 1 |
 | `.skill.md` | `skills` | `.studio/skills/` | 2 |
 | `.pipeline.yaml` | `pipelines` | `.studio/pipelines/` | 0 |
 | `.contract.yaml` | `contracts` | `.studio/contracts/` | 0 |
@@ -47,7 +46,7 @@ studio registry install software           # a template
 studio registry install git@1.0.0          # pin a version
 ```
 
-There are no package scopes. Names are flat (`linear`, not `@studio/linear-trigger`). Installing a template writes it under `.studio/projects/<name>/`. Installing a plugin dispatches each payload file to the `.studio/` subdirectory matching its content kind.
+There are no package scopes. Names are flat (`git`, not `@studio/git-tool`). Installing a template writes it under `.studio/projects/<name>/`. Installing a plugin dispatches each payload file to the `.studio/` subdirectory matching its content kind.
 
 If a package executes shell commands (`execute.type: shell`), the installer detects it and asks for confirmation before writing the file. If a package declares `requires_binaries`, the installer warns when a binary is missing from `PATH`. Required dependencies are installed automatically; recommended ones are prompted.
 
@@ -177,7 +176,7 @@ To update an existing package, bump `version` in its `metadata.json`. That is th
 
 ## Security
 
-Packages that execute shell commands (`execute.type: shell` in `.tool.yaml`, or `on_failure` in `.trigger.yaml`) are detected at install time. The CLI shows the file and asks for explicit confirmation before writing it.
+Packages that execute shell commands (`execute.type: shell` in `.tool.yaml`) are detected at install time. The CLI shows the file and asks for explicit confirmation before writing it.
 
 Each installed package is checksummed (SHA256) in `.studio/registry.lock.json`. Run `studio registry audit` to verify that installed files still match their recorded checksums.
 

@@ -49,7 +49,6 @@ Chaque fichier du payload est dispatché selon son extension :
 | `.tool.yaml` | `tools` | `.studio/tools/` |
 | `.agent.yaml` | `agents` | `.studio/agents/` |
 | `.pipeline.yaml` | `pipelines` | `.studio/pipelines/` |
-| `.trigger.yaml` | `triggers` | `.studio/triggers/` |
 | `.contract.yaml` | `contracts` | `.studio/contracts/` |
 | `.skill.md` | `skills` | `.studio/skills/` |
 
