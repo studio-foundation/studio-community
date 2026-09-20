@@ -1,0 +1,37 @@
+name: linear
+version: 1
+description: "Launch feature-builder when a Linear issue moves to In Progress"
+pipeline: feature-builder
+
+webhook:
+  hmac:
+    header: linear-signature
+    secret: ${LINEAR_WEBHOOK_SECRET}
+  when:
+    - 'payload.type == "Issue"'
+    - 'payload.action == "update"'
+    - 'payload.data.state.name == "In Progress"'
+
+input:
+  brief_summary: "{{payload.data.identifier}} · {{payload.data.title}}"
+  description: "{{payload.data.description}}"
+  acceptance_criteria: []
+
+meta:
+  linear_issue_id: "{{payload.data.id}}"
+  linear_issue_identifier: "{{payload.data.identifier}}"
+  linear_issue_url: "{{payload.url}}"
+
+log:
+  external_id: "{{payload.data.id}}"
+  external_label: "{{payload.data.identifier}} · {{payload.data.title}}"
+  external_url: "{{payload.url}}"
+
+on_failure:
+  command: |
+    ISSUE_ID=$(printf '%s' "$STUDIO_META" | jq -r '.linear_issue_id // empty')
+    [ -n "$ISSUE_ID" ] || exit 0
+    jq -n --arg id "$ISSUE_ID" --arg run "$STUDIO_RUN_ID" --arg reason "$STUDIO_REJECTION_REASON" \
+      '{query: "mutation($issueId: String!, $body: String!) { commentCreate(input: {issueId: $issueId, body: $body}) { success } }",
+        variables: {issueId: $id, body: ("Studio run " + $run + " did not succeed" + (if $reason != "" then ": " + $reason else "" end))}}' \
+      | curl -fsS https://api.linear.app/graphql -H "Authorization: $LINEAR_API_KEY" -H "Content-Type: application/json" --data @-
