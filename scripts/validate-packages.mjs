@@ -21,6 +21,7 @@ const CONTENT_KINDS = {
   '.agent.yaml': 'agents',
   '.pipeline.yaml': 'pipelines',
   '.integration.yaml': 'integrations',
+  '.trigger.yaml': 'triggers',
   '.contract.yaml': 'contracts',
   '.skill.md': 'skills',
 };
