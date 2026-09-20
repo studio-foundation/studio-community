@@ -3,7 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 import semver from 'semver';
-import { parseAgentYaml, parseContractYaml, parsePipelineYaml } from '@studio-foundation/engine';
+import { parseAgentYaml, parseContractYaml, parsePipelineYaml, resolveEnvVars } from '@studio-foundation/engine';
 import { loadProjectTools } from '@studio-foundation/runner';
 
 const ROOT = dirname(fileURLToPath(import.meta.url)) + '/..';
@@ -36,7 +36,24 @@ const KERNEL_PARSERS = {
   '.pipeline.yaml': parsePipelineYaml,
   '.agent.yaml': parseAgentYaml,
   '.contract.yaml': parseContractYaml,
+  '.trigger.yaml': parseTriggerYaml,
 };
+
+/**
+ * Mirrors loadProjectTriggers in @studio-foundation/api (dist/triggers/trigger-loader.js),
+ * which the package does not export. A ${VAR} with no default gets a placeholder, since
+ * that secret only exists in the environment of whoever installs the trigger.
+ */
+function parseTriggerYaml(content, file) {
+  const filled = content.replace(/\$\{([^}:]+)\}/g, (match, name) => (process.env[name] ? match : 'placeholder'));
+  const def = yaml.load(resolveEnvVars(filled));
+  if (!def?.name) throw new Error(`Trigger '${file}' is missing 'name'`);
+  if (!def.pipeline) throw new Error(`Trigger '${def.name}' is missing 'pipeline'`);
+  if (def.webhook?.hmac && !def.webhook.hmac.secret) {
+    throw new Error(`Trigger '${def.name}' declares webhook.hmac but its secret resolved to nothing`);
+  }
+  return def;
+}
 
 async function ls(dir) {
   try { return await readdir(dir); } catch { return []; }
