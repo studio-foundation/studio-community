@@ -1,6 +1,6 @@
 {
   "name": "finance",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Categorize transactions from a bank export, plan a budget, and split shared expenses between accounts",
   "author": "studio-core",
   "license": "MIT",
